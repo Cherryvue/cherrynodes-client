@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { K8sController } from './k8s.controller';
-import { PostProxyHandler } from './post-proxy/post-proxy.handler';
 import { GetK8sTokenHandler } from './get-k8s-token/get-k8s-token.handler';
 import { GetHttpsAgentHandler } from './get-https-agent/get-https-agent.handler';
-import { GetClusterServerHandler } from './get-cluster-server/get-cluster-server.handler';
+import { k8sProxyHandler } from './k8s-proxy/k8s-proxy.handler';
+import { GetClusterUserHandler } from './get-custer-user/get-custer-user.handler';
+import { GetCubeConfigHandler } from './get-kube-config/get-kube-config.handler';
+import { GetClusterHandler } from './get-cluster/get-cluster.handler';
 
-const commandHandlers = [PostProxyHandler];
+const commandHandlers = [k8sProxyHandler];
 const queryHandlers = [
   GetK8sTokenHandler,
   GetHttpsAgentHandler,
-  GetClusterServerHandler,
+  GetClusterHandler,
+  GetClusterUserHandler,
+  GetCubeConfigHandler,
 ];
 
 @Module({

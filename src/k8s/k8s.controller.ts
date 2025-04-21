@@ -1,53 +1,54 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { PostProxyCommand } from './post-proxy/post-proxy.command';
+import { K8sProxyCommand, RequestMethod } from './k8s-proxy/k8s-proxy.command';
 
 @Controller('k8s')
 export class K8sController {
   @Inject() private readonly commandBus: CommandBus;
 
-  @Get()
-  async proxyGet(@Body('path') path: string) {
-    console.log({ path });
-  }
+  // @Get()
+  // async proxyGet(@Body('path') path: string) {
+  //   return this.commandBus.execute<K8sProxyCommand, string>(
+  //     new K8sProxyCommand('GET', path, {}),
+  //   );
+  // }
 
   @Post()
   async proxyPost(
     @Body('manifest') manifest: Record<any, any>,
     @Body('path') path: string,
+    @Body('method') method: RequestMethod,
   ) {
-    return this.commandBus.execute<PostProxyCommand, string>(
-      new PostProxyCommand(path, manifest),
+    return this.commandBus.execute<K8sProxyCommand, string>(
+      new K8sProxyCommand(method, path, manifest),
     );
   }
 
-  @Put()
-  async proxyPut(
-    @Body('manifest') manifest: Record<any, any>,
-    @Body('path') path: string,
-  ) {
-    console.log({ path, manifest });
-  }
+  // @Put()
+  // async proxyPut(
+  //   @Body('manifest') manifest: Record<any, any>,
+  //   @Body('path') path: string,
+  // ) {
+  //   return this.commandBus.execute<K8sProxyCommand, string>(
+  //     new K8sProxyCommand('PUT', path, manifest),
+  //   );
+  // }
 
-  @Patch()
-  async proxyPatch(
-    @Body('manifest') manifest: Record<any, any>,
-    @Body('path') path: string,
-  ) {
-    console.log({ path, manifest });
-  }
+  // @Patch()
+  // async proxyPatch(
+  //   @Body('manifest') manifest: Record<any, any>,
+  //   @Body('path') path: string,
+  // ) {
+  //   return this.commandBus.execute<K8sProxyCommand, string>(
+  //     new K8sProxyCommand('PATCH', path, manifest),
+  //   );
+  // }
 
-  @Delete()
-  async proxyDelete(@Body('path') path: string) {
-    console.log({ path });
-  }
+  // @Delete()
+  // async proxyDelete(@Param('path') path: string) {
+  //   console.log({ path });
+
+  //   return null;
+  //   new K8sProxyCommand('DELETE', path, {});
+  // }
 }
