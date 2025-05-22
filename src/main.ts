@@ -16,7 +16,7 @@ async function bootstrap() {
 
   new Swagger(app);
 
-  await app.listen(PORT, () =>
+  await app.listen(PORT, '0.0.0.0', () =>
     console.log(chalk.blue(`Listening on port: ${PORT}`)),
   );
 }

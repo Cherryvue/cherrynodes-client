@@ -18,9 +18,11 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
     const cluster = await this.queryBus.execute<GetClusterQuery, Cluster>(
       new GetClusterQuery(),
     );
+    console.log({ cluster });
     const user = await this.queryBus.execute<GetClusterUserQuery, User>(
       new GetClusterUserQuery(),
     );
+    console.log({ user });
     const httpsAgent = await this.queryBus.execute<GetHttpsAgentQuery, Agent>(
       new GetHttpsAgentQuery(),
     );
@@ -34,7 +36,10 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
       },
     };
 
+    console.log({ tokenRequest });
+
     const url = `${cluster.server}/api/v1/namespaces/${namespace}/serviceaccounts/${serviceAccountName}/token`;
+    console.log({ url });
 
     try {
       const response = await axios.post<{ status: { token: string } }>(
@@ -48,6 +53,8 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
           httpsAgent,
         },
       );
+
+      console.log({ response });
 
       return response.data.status.token;
     } catch (error) {
