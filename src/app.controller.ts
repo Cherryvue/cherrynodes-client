@@ -10,4 +10,10 @@ export class AppController {
   async login() {
     await this.commandBus.execute<LoginCommand, void>(new LoginCommand());
   }
+
+  @Get('test')
+  async test() {
+    console.log('test elo');
+    return 'elo';
+  }
 }
