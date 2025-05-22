@@ -61,7 +61,7 @@ export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
 
     try {
       const result = await response;
-      console.log('Deployment utworzony:', { result: result.data });
+      console.log('Applied', { result: result.data });
       return result.data;
     } catch (e: any) {
       if (e instanceof AxiosError) return e.response.data;
