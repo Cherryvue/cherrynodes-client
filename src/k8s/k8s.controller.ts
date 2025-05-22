@@ -19,6 +19,7 @@ export class K8sController {
     @Body('path') path: string,
     @Body('method') method: RequestMethod,
   ) {
+    console.log({ path, method });
     return this.commandBus.execute<K8sProxyCommand, string>(
       new K8sProxyCommand(method, path, manifest),
     );
