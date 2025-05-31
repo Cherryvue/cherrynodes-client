@@ -22,7 +22,7 @@ export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
     );
     console.log('httpsAgent', httpsAgent);
     const k8sToken = await this.queryBus.execute<GetK8sTokenQuery, string>(
-      new GetK8sTokenQuery('my-deployment-sa', 'default'),
+      new GetK8sTokenQuery('global-admin', 'kube-system'),
     );
     console.log('k8sToken', k8sToken);
     const url = `${cluster.server}${path}`;

@@ -58,6 +58,7 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
 
       return response.data.status.token;
     } catch (error) {
+      console.log('GetK8sTokenHandler error', error);
       throw new InternalServerErrorException(
         `Something went wrong while getting the token: ${error.message}`,
       );
