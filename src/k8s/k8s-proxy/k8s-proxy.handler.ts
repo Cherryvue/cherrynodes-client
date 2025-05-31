@@ -16,13 +16,17 @@ export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
     const cluster = await this.queryBus.execute<GetClusterQuery, Cluster>(
       new GetClusterQuery(),
     );
+    console.log('cluster', cluster);
     const httpsAgent = await this.queryBus.execute<GetHttpsAgentQuery, Agent>(
       new GetHttpsAgentQuery(),
     );
+    console.log('httpsAgent', httpsAgent);
     const k8sToken = await this.queryBus.execute<GetK8sTokenQuery, string>(
       new GetK8sTokenQuery('my-deployment-sa', 'default'),
     );
+    console.log('k8sToken', k8sToken);
     const url = `${cluster.server}${path}`;
+    console.log('url', url);
 
     const reguestOptions: AxiosRequestConfig = {
       headers: {
@@ -64,6 +68,7 @@ export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
       console.log('Applied', { result: result.data });
       return result.data;
     } catch (e: any) {
+      console.log('e', e);
       if (e instanceof AxiosError) return e.response.data;
       return e.message;
     }
