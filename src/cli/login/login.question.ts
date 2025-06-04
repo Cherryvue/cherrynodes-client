@@ -32,7 +32,7 @@ export class LoginInfoQuestions {
   }
 
   @Question({
-    type: 'checkbox',
+    type: 'confirm',
     name: 'master',
     default: true,
     message: 'Treat this node as master',
