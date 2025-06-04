@@ -34,3 +34,8 @@ sudo cp cherrynodes /usr/local/bin/cherrynodes
 
 echo "CLI installed successfully. You can now run 'cherrynodes' globally."
 echo "Example: cherrynodes --help"
+
+
+
+# K8s solo project 1
+# sudo systemctl status cherrynodes

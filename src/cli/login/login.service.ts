@@ -1,47 +1,66 @@
 import { Injectable } from '@nestjs/common';
 import { Login } from './login.question';
 import axios from 'axios';
+import * as os from 'os';
+import * as path from 'path';
+import { writeFile } from 'fs/promises';
+
+type LoginRequest = Login & {
+  hostname: string;
+  platform: string;
+};
 
 @Injectable()
 export class LoginService {
-  private serverUrl = 'http://localhost:4041';
-  private machineId = 'bb7905b7-fded-43d8-a4d2-9d40cb9425de';
+  #serverUrl = 'https://api.cherry-nodes.com';
 
-  async login(loginData: Login): Promise<void> {
-    const login = {
-      ...loginData,
-      machineId: this.machineId,
+  readonly #configPath = path.join(
+    os.homedir(),
+    '.config',
+    'cherrynodes',
+    'auth.json',
+  );
+
+  async login(_loginData: Login): Promise<void> {
+    const login: LoginRequest = {
+      ..._loginData,
+      hostname: os.hostname(),
+      platform: os.platform(),
     };
-
     console.log({ login });
 
+    const dir = path.dirname(this.#configPath);
+    await this.#ensureDirectoryExists(dir);
+
     try {
-      const authResponse = await axios.post<{ token: string }>(
-        `${this.serverUrl}/auth-machine/connect`,
+      const authResponse = await axios.post<{ machineId: string }>(
+        `${this.#serverUrl}/auth-machine/connect`,
         login,
       );
 
-      const token = authResponse.data.token;
-      console.log('Uzyskano token autentykacyjny:');
-      console.log({ token });
-    } catch (error) {
-      console.error('Błąd podczas autoryzacji:', error as any);
-    }
+      const machineId = authResponse.data.machineId;
+      console.log('machineId: ', machineId);
 
-    //   try {
-    //     const response = await axios.post<{ token: string }>(
-    //       'http://api.cherry-nodes.com/auth-machine/login',
-    //       {
-    //         ...loginData,
-    //         ip: '192.168.1.33',
-    //         mac: 'ELO:ELO:ELO:ELO',
-    //         Headers: { Authorization: `Bearer ${123}` },
-    //       },
-    //     );
-    //     return response.data.token;
-    //   } catch (e) {
-    //     console.error(e);
-    //     return null;
-    //   }
+      await writeFile(
+        this.#configPath,
+        JSON.stringify({ ...login, machineId }, null, 2),
+        {
+          encoding: 'utf-8',
+        },
+      );
+    } catch (error) {
+      console.error('Authorization error', error);
+    }
+  }
+
+  async #ensureDirectoryExists(dir: string): Promise<void> {
+    const fs = await import('fs/promises');
+    try {
+      await fs.mkdir(dir, { recursive: true });
+    } catch (e) {
+      if (e.code !== 'EEXIST') {
+        throw e;
+      }
+    }
   }
 }
