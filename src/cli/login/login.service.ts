@@ -34,7 +34,7 @@ export class LoginService {
 
     try {
       const authResponse = await axios.post<{ machineId: string }>(
-        `${this.#serverUrl}/auth-machine/connect`,
+        `${this.#serverUrl}/machine-auth/connect`,
         login,
       );
 
