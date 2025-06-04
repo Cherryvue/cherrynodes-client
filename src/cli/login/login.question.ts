@@ -3,7 +3,7 @@ import { Question, QuestionSet } from 'nest-commander';
 export type Login = {
   serviceAccountLogin: string;
   serviceAccountSecret: string;
-  isMaster: boolean;
+  master: boolean;
   ip?: string;
 };
 
@@ -33,12 +33,12 @@ export class LoginInfoQuestions {
 
   @Question({
     type: 'checkbox',
-    name: 'isMaster',
+    name: 'master',
     default: true,
     message: 'Treat this node as master',
   })
-  isMaster(isMaster: Login['isMaster']): boolean {
-    return isMaster;
+  isMaster(master: Login['master']): boolean {
+    return master;
   }
 
   @Question({
