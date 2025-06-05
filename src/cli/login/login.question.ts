@@ -44,8 +44,8 @@ export class LoginInfoQuestions {
   @Question({
     type: 'input',
     name: 'ip',
-    message: 'Pass public IP address',
-    when: (answers) => answers.isMaster === true,
+    message: 'Pass machine public IP address',
+    // when: (answers) => answers.master === true,
   })
   publicIp(ip: Login['ip']): string {
     return ip;
