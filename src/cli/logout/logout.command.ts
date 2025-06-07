@@ -15,8 +15,10 @@ export class LogoutCommand extends CommandRunner {
   async run(_: string[], _options: Logout): Promise<void> {
     try {
       const { logout } = await this.inquirerService.ask('logout', _options);
-      console.log('Logout aborted');
-      if (!logout) return;
+      if (!logout) {
+        console.log('Logout aborted');
+        return;
+      }
       await this.logoutService.logout();
     } catch (error) {
       console.log(error);

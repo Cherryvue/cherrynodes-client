@@ -38,4 +38,22 @@ export class AuthMachineService {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
+
+  async signToken(machineId: string): Promise<string> {
+    const serviceAccountSecret = await this.config.readByKey(
+      'serviceAccountSecret',
+    );
+    if (!serviceAccountSecret) throw new UnauthorizedException();
+
+    return jwt.sign(
+      {
+        sub: machineId,
+      },
+      serviceAccountSecret,
+      {
+        expiresIn: '1h',
+        algorithm: 'HS256',
+      },
+    );
+  }
 }
