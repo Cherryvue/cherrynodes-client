@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '../config/config.service';
 import { MACHINE_AUTH_URL } from '../consts';
-import { AuthMachineService } from '@app/auth/auth-machine.service';
+import { AuthMachineService } from '../auth/auth-machine.service';
 
 @Injectable()
 export class LogoutService {

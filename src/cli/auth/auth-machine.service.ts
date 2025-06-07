@@ -1,4 +1,3 @@
-import { ConfigService } from '@app/config/config.service';
 import {
   ForbiddenException,
   Inject,
@@ -6,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class AuthMachineService {
