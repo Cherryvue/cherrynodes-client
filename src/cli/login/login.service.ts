@@ -31,7 +31,7 @@ export class LoginService {
       const machineId = authResponse.data.machineId;
       await this.config.upsert({ ...login, machineId });
     } catch (error) {
-      console.error('Authorization error', error);
+      console.error('Authorization error', error.message);
     }
   }
 }
