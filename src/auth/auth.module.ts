@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { LognHandler } from './login/login.handler';
+import { AuthMachineService } from './auth-machine.service';
+import { ConfigModule } from '@app/config/config.module';
 
-const commandHandlers = [LognHandler];
-
-@Module({ providers: [...commandHandlers] })
+@Module({
+  providers: [AuthMachineService],
+  exports: [AuthMachineService],
+  imports: [ConfigModule],
+})
 export class AuthModule {}

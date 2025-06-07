@@ -4,7 +4,7 @@ export type Login = {
   serviceAccountLogin: string;
   serviceAccountSecret: string;
   master: boolean;
-  ip?: string;
+  ip: string;
 };
 
 @QuestionSet({ name: 'login' })

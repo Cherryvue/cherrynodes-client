@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { LoginCommand } from './login/login.command';
-import { LoginInfoQuestions } from './login/login.question';
-import { LoginService } from './login/login.service';
+import { LoginModule } from './login/login.module';
+import { LogoutModule } from './logout/logout.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
-  providers: [LoginCommand, LoginInfoQuestions, LoginService],
+  imports: [LoginModule, LogoutModule, ConfigModule],
 })
 export class CliModule {}

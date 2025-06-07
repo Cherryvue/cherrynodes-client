@@ -12,21 +12,18 @@ import { GetClusterQuery } from '../get-cluster/get-cluster.query';
 export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
   @Inject() private readonly queryBus: QueryBus;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async execute({ method, path, manifest }: K8sProxyCommand): Promise<any> {
     const cluster = await this.queryBus.execute<GetClusterQuery, Cluster>(
       new GetClusterQuery(),
     );
-    console.log('cluster', cluster);
     const httpsAgent = await this.queryBus.execute<GetHttpsAgentQuery, Agent>(
       new GetHttpsAgentQuery(),
     );
-    console.log('httpsAgent', httpsAgent);
     const k8sToken = await this.queryBus.execute<GetK8sTokenQuery, string>(
       new GetK8sTokenQuery('global-admin', 'kube-system'),
     );
-    console.log('k8sToken', k8sToken);
     const url = `${cluster.server}${path}`;
-    console.log('url', url);
 
     const reguestOptions: AxiosRequestConfig = {
       headers: {
@@ -67,6 +64,7 @@ export class k8sProxyHandler implements ICommandHandler<K8sProxyCommand> {
       const result = await response;
       console.log('Applied', { result: result.data });
       return result.data;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       console.log('e', e);
       if (e instanceof AxiosError) return e.response.data;

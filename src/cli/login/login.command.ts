@@ -15,8 +15,6 @@ export class LoginCommand extends CommandRunner {
   async run(_: string[], _options: Login): Promise<void> {
     try {
       const loginData = await this.inquirerService.ask('login', _options);
-      console.log({ loginData });
-
       await this.loginService.login(loginData);
     } catch (error) {
       console.log(error);

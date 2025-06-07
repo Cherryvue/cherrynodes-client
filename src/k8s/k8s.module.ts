@@ -6,6 +6,7 @@ import { k8sProxyHandler } from './k8s-proxy/k8s-proxy.handler';
 import { GetClusterUserHandler } from './get-custer-user/get-custer-user.handler';
 import { GetCubeConfigHandler } from './get-kube-config/get-kube-config.handler';
 import { GetClusterHandler } from './get-cluster/get-cluster.handler';
+import { AuthModule } from '@app/auth/auth.module';
 
 const commandHandlers = [k8sProxyHandler];
 const queryHandlers = [
@@ -19,5 +20,6 @@ const queryHandlers = [
 @Module({
   controllers: [K8sController],
   providers: [...commandHandlers, ...queryHandlers],
+  imports: [AuthModule],
 })
 export class K8sModule {}

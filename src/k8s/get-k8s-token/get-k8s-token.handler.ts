@@ -18,11 +18,9 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
     const cluster = await this.queryBus.execute<GetClusterQuery, Cluster>(
       new GetClusterQuery(),
     );
-    console.log({ cluster });
     const user = await this.queryBus.execute<GetClusterUserQuery, User>(
       new GetClusterUserQuery(),
     );
-    console.log({ user });
     const httpsAgent = await this.queryBus.execute<GetHttpsAgentQuery, Agent>(
       new GetHttpsAgentQuery(),
     );
@@ -36,11 +34,7 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
       },
     };
 
-    console.log({ tokenRequest });
-
     const url = `${cluster.server}/api/v1/namespaces/${namespace}/serviceaccounts/${serviceAccountName}/token`;
-    console.log({ url });
-
     try {
       const response = await axios.post<{ status: { token: string } }>(
         url,
@@ -54,8 +48,6 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
         },
       );
 
-      console.log({ response });
-
       return response.data.status.token;
     } catch (error) {
       console.log('GetK8sTokenHandler error', error);
@@ -65,37 +57,3 @@ export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenQuery> {
     }
   }
 }
-
-// ! Legacy
-
-// /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-// import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-// import { GetK8sTokenCommand } from './get-k8s-token.command';
-// import { exec } from 'child_process';
-// import { promisify } from 'util';
-// import { InternalServerErrorException } from '@nestjs/common';
-
-// const execAsync = promisify(exec);
-
-// @QueryHandler(GetK8sTokenCommand)
-// export class GetK8sTokenHandler implements IQueryHandler<GetK8sTokenCommand> {
-//   async execute({
-//     namespace,
-//     serviceAccountName,
-//   }: GetK8sTokenCommand): Promise<string> {
-//     try {
-//       const { stdout: token } = await execAsync(
-//         `kubectl create token ${serviceAccountName} -n ${namespace} --duration=3600s`,
-//       );
-
-//       if (!token)
-//         throw new Error('Something went wrong while generating new token');
-
-//       return token.trim();
-//     } catch (e) {
-//       throw new InternalServerErrorException(
-//         `Could not get token: ${e.message}`,
-//       );
-//     }
-//   }
-// }

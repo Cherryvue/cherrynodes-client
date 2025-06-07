@@ -1,55 +1,34 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  Headers,
+  BadRequestException,
+} from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { K8sProxyCommand, RequestMethod } from './k8s-proxy/k8s-proxy.command';
+import { AuthMachineService } from '@app/auth/auth-machine.service';
 
 @Controller('k8s')
 export class K8sController {
   @Inject() private readonly commandBus: CommandBus;
-
-  // @Get()
-  // async proxyGet(@Body('path') path: string) {
-  //   return this.commandBus.execute<K8sProxyCommand, string>(
-  //     new K8sProxyCommand('GET', path, {}),
-  //   );
-  // }
+  @Inject() private readonly authMachineService: AuthMachineService;
 
   @Post()
   async proxyPost(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Body('manifest') manifest: Record<any, any>,
     @Body('path') path: string,
     @Body('method') method: RequestMethod,
+    @Headers('authorization') authorizationHeader: string,
   ) {
-    console.log({ path, method });
+    if (!path || !method)
+      throw new BadRequestException('"path" and "method" should be defined');
+    await this.authMachineService.verifyToken(authorizationHeader);
+
     return this.commandBus.execute<K8sProxyCommand, string>(
       new K8sProxyCommand(method, path, manifest),
     );
   }
-
-  // @Put()
-  // async proxyPut(
-  //   @Body('manifest') manifest: Record<any, any>,
-  //   @Body('path') path: string,
-  // ) {
-  //   return this.commandBus.execute<K8sProxyCommand, string>(
-  //     new K8sProxyCommand('PUT', path, manifest),
-  //   );
-  // }
-
-  // @Patch()
-  // async proxyPatch(
-  //   @Body('manifest') manifest: Record<any, any>,
-  //   @Body('path') path: string,
-  // ) {
-  //   return this.commandBus.execute<K8sProxyCommand, string>(
-  //     new K8sProxyCommand('PATCH', path, manifest),
-  //   );
-  // }
-
-  // @Delete()
-  // async proxyDelete(@Param('path') path: string) {
-  //   console.log({ path });
-
-  //   return null;
-  //   new K8sProxyCommand('DELETE', path, {});
-  // }
 }
