@@ -20,7 +20,12 @@ export class LogoutService {
         `${MACHINE_AUTH_URL}/logout/${machineId}`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
-      if (response.data.success) await this.config.removeConfig();
+      if (response.data.success) {
+        await this.config.removeConfig();
+        console.log('Machine disconnected');
+        return;
+      }
+      console.log('Could not disconned machine');
     } catch (error) {
       console.error('Authorization error', error);
     }
